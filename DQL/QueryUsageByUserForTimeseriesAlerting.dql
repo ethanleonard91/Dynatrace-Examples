@@ -1,0 +1,16 @@
+/*
+Query intended to create timeseries of scanned bytes by user for use in Davis Anomaly Detection.
+
+*/
+
+// Query system events table which contains audit logs
+fetch dt.system.events
+
+// filter for queries
+| filter event.kind == "QUERY_EXECUTION_EVENT"
+
+// filter out tables that aren't billed
+| filterOut table == "metrics" or table == "dt.system.events" or table ==""
+
+// create timeseries summing total bytes scanned by user, with a daily interval
+| makeTimeseries total_scanned_bytes = sum(scanned_bytes), by:{user.email, user.id}, interval: 24h
