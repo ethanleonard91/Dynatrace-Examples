@@ -1,3 +1,7 @@
+/*
+Query to analyze query usage by user and calculate cost based on scanned bytes.
+*/
+
 fetch dt.system.events
 
 //filter for queries
