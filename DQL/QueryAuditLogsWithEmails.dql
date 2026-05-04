@@ -1,0 +1,14 @@
+// Fetches audit events
+fetch dt.system.events
+| filter event.kind == "AUDIT_EVENT"
+
+// For settings changes, can optionally specify settings
+// | filter event.provider == "SETTINGS"
+
+// Use a `join` command to QUERY_EXECUTION_EVENTs, which do store user.email, and 
+// add it based on the user.id to the main table
+| join [
+  fetch dt.system.events
+  | filter event.kind == "QUERY_EXECUTION_EVENT"
+  | fields user.id, user.email
+  ], on:{user.id}, fields:{user.email}
